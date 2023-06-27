@@ -6,6 +6,6 @@
 6. SBT’s are managed by the wallet name “Souls”.
 7. There are various use cases of SBT’s such as issuing educational certificates, issuing licenses, managing health records, issuing various types of certificates, etc.
 8. References:- 
-  a. https://www.sbt-ethereum.io/
-  b. https://www.leewayhertz.com/soulbound-tokens/
-  c. https://eips.ethereum.org/EIPS/eip-4973
+   https://www.sbt-ethereum.io/
+   https://www.leewayhertz.com/soulbound-tokens/
+   https://eips.ethereum.org/EIPS/eip-4973
