@@ -32,7 +32,6 @@ contract SoulBoundToken is ERC721, ERC721URIStorage, Ownable {
     }
 
     function _afterTokenTransfer(address from, address to, uint256 tokenId) override internal {
-
         if (from == address(0)) {
             emit Attest(to, tokenId);
         } else if (to == address(0)) {
