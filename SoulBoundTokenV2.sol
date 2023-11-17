@@ -1,4 +1,4 @@
-//"SPDX-License-Identifier: UNLICENSED"
+// SPDX-License-Identifier: UNLICENSED
 
 pragma solidity ^0.8.4;
 
@@ -10,9 +10,9 @@ import "hardhat/console.sol";
 contract SoulBoundTokenV2 is ERC721, ERC721URIStorage, Ownable {
     uint256 private tokenID = 0;
     uint256 public totalNftMinted;
-    uint256 private constant nftLockingPeriod = 300 seconds;
     uint256 public constant totalNftSupply = 5;
     uint256 private constant nftToBeMintInLockingPeriod = 3;
+    uint256 private constant nftLockingPeriod = 300 seconds;
 
     event Attest(address indexed to, uint256 indexed tokenId);
     event Revoke(address indexed to, uint256 indexed tokenId);
@@ -33,8 +33,8 @@ contract SoulBoundTokenV2 is ERC721, ERC721URIStorage, Ownable {
         tokenID ++;
         nftUser[_to][tokenID].tokenId = tokenID;
         nftUser[_to][tokenID].nftUserAddress = _to;
-        nftUser[_to][tokenID].lockingPeriod = block.timestamp + nftLockingPeriod;
         nftUser[_to][tokenID].boughtTime = block.timestamp;
+        nftUser[_to][tokenID].lockingPeriod = block.timestamp + nftLockingPeriod;
         _safeMint(_to, tokenID);
         _setTokenURI(tokenID, _uri);
         totalNftMinted++;
