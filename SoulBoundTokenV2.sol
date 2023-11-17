@@ -29,7 +29,7 @@ contract SoulBoundTokenV2 is ERC721, ERC721URIStorage, Ownable {
     constructor() ERC721("SoulBound", "SBT") {}
 
     function safeMint(address _to, string memory _uri) external onlyOwner {
-        require(totalNftMinted <= totalNftSupply, "NFT reached its limit");
+        require(totalNftMinted < totalNftSupply, "NFT reached its limit");
         tokenID ++;
         nftUser[_to][tokenID].tokenId = tokenID;
         nftUser[_to][tokenID].nftUserAddress = _to;
