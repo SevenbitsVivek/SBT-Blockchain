@@ -18,10 +18,11 @@ contract SoulBoundTokenV2 is ERC721, ERC721URIStorage, Ownable {
     event Revoke(address indexed to, uint256 indexed tokenId);
 
     struct NftUser {
-        address nftUserAddress;
         uint256 tokenId;
+        address nftUserAddress;
         uint256 boughtTime;
         uint256 lockingPeriod;
+        bool isSold;
     }
 
     mapping(address => mapping (uint256 => NftUser)) public nftUser;
@@ -34,7 +35,7 @@ contract SoulBoundTokenV2 is ERC721, ERC721URIStorage, Ownable {
         nftUser[_to][tokenID].tokenId = tokenID;
         nftUser[_to][tokenID].nftUserAddress = _to;
         nftUser[_to][tokenID].boughtTime = block.timestamp;
-        nftUser[_to][tokenID].lockingPeriod = block.timestamp + nftLockingPeriod;
+        nftUser[_to][tokenID].lockingPeriod = totalNftMinted < nftToBeMintInLockingPeriod ? block.timestamp + nftLockingPeriod: 0;
         _safeMint(_to, tokenID);
         _setTokenURI(tokenID, _uri);
         totalNftMinted++;
@@ -45,14 +46,16 @@ contract SoulBoundTokenV2 is ERC721, ERC721URIStorage, Ownable {
         _burn(tokenId);
     }
 
-    function _beforeTokenTransfer(address from, address to, uint256 tokenId) view override internal {
+    function _beforeTokenTransfer(address from, address to, uint256 tokenId) override internal {
         if (totalNftMinted <= nftToBeMintInLockingPeriod) {
+            nftUser[from][tokenId].isSold = true;
             if (nftUser[from][tokenId].boughtTime + nftLockingPeriod >= block.timestamp || nftUser[to][tokenId].boughtTime + nftLockingPeriod >= block.timestamp) {
                 require(from == address(0) || to == address(0), "Not allowed to transfer nft");
             }
         } 
 
         if (totalNftMinted > nftToBeMintInLockingPeriod && totalNftMinted <= totalNftSupply) {
+            nftUser[from][tokenId].isSold = true;
             if (nftUser[from][tokenId].tokenId <= nftToBeMintInLockingPeriod) {
                 require(nftUser[from][tokenId].boughtTime + nftLockingPeriod <= block.timestamp, "Not allowed to transfer nft");
             }
