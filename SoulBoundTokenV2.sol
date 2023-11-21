@@ -8,7 +8,7 @@ import "@openzeppelin/contracts@4.7.0/token/ERC721/extensions/ERC721URIStorage.s
 import "hardhat/console.sol";
 
 contract SoulBoundTokenV2 is ERC721, ERC721URIStorage, Ownable {
-    uint256 private tokenID = 0;
+    uint256 private tokenID;
     uint256 public totalNftMinted;
     uint256 public constant totalNftSupply = 5;
     uint256 private constant nftToBeMintInLockingPeriod = 3;
