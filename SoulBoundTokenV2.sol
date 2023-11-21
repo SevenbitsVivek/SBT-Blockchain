@@ -36,7 +36,7 @@ contract SoulBoundTokenV2 is ERC721, ERC721URIStorage, Ownable {
         nftUser[_to][tokenID].nftUserAddress = _to;
         nftUser[_to][tokenID].boughtTime = block.timestamp;
         totalNftMinted++;
-        nftUser[_to][tokenID].lockingPeriod = totalNftMinted < nftToBeMintInLockingPeriod ? block.timestamp + nftLockingPeriod: 0;
+        nftUser[_to][tokenID].lockingPeriod = totalNftMinted <= nftToBeMintInLockingPeriod ? block.timestamp + nftLockingPeriod: 0;
         _safeMint(_to, tokenID);
         _setTokenURI(tokenID, _uri);
     }
