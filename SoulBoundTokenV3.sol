@@ -91,7 +91,7 @@ contract SoulBoundTokenV3 is ERC721, ERC721URIStorage, Ownable {
             "ERC721: approve caller is not token owner nor approved for all"
             );
             _approve(to, tokenId);
-            if (nftUser[owner][tokenId].tokenId <= nftToBeMintInLockingPeriod) {
+            if (nftUser[owner][tokenId].tokenId < nftToBeMintInLockingPeriod) {
                 require(nftUser[owner][tokenId].boughtTime + nftLockingPeriod <= block.timestamp, "Not allowed to approve nft");
             }
         }
