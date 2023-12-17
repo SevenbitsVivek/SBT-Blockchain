@@ -53,7 +53,7 @@ contract SoulBoundTokenV3 is ERC721, ERC721URIStorage, Ownable {
 
     function _beforeTokenTransfer(address from, address to, uint256 tokenId) override internal {
         if (totalNftMinted <= nftToBeMintInLockingPeriod) {
-            if (nftUser[from][tokenId].boughtTime + nftLockingPeriod >= block.timestamp || nftUser[to][tokenId].boughtTime + nftLockingPeriod >= block.timestamp) {
+            if (nftUser[from][tokenId].lockingPeriod >= block.timestamp || nftUser[to][tokenId].lockingPeriod >= block.timestamp) {
                 require(from == address(0) || to == address(0), "Not allowed to transfer nft");
             }
             nftUser[from][tokenId].isSold = true;
@@ -61,7 +61,7 @@ contract SoulBoundTokenV3 is ERC721, ERC721URIStorage, Ownable {
 
         if (totalNftMinted > nftToBeMintInLockingPeriod && totalNftMinted <= totalNftSupply) {
             if (nftUser[from][tokenId].tokenId < nftToBeMintInLockingPeriod) {
-                require(nftUser[from][tokenId].boughtTime + nftLockingPeriod <= block.timestamp, "Not allowed to transfer nft");
+                require(nftUser[from][tokenId].lockingPeriod <= block.timestamp, "Not allowed to transfer nft");
             }
             nftUser[from][tokenId].isSold = true;
         }
@@ -77,7 +77,7 @@ contract SoulBoundTokenV3 is ERC721, ERC721URIStorage, Ownable {
             );
             _approve(to, tokenId);
 
-            if (nftUser[owner][tokenId].boughtTime + nftLockingPeriod >= block.timestamp || nftUser[to][tokenId].boughtTime + nftLockingPeriod >= block.timestamp) {
+            if (nftUser[owner][tokenId].lockingPeriod >= block.timestamp || nftUser[to][tokenId].lockingPeriod >= block.timestamp) {
                 require(owner == address(0) || to == address(0), "Not allowed to approve nft");
             }
         } 
@@ -92,7 +92,7 @@ contract SoulBoundTokenV3 is ERC721, ERC721URIStorage, Ownable {
             );
             _approve(to, tokenId);
             if (nftUser[owner][tokenId].tokenId < nftToBeMintInLockingPeriod) {
-                require(nftUser[owner][tokenId].boughtTime + nftLockingPeriod <= block.timestamp, "Not allowed to approve nft");
+                require(nftUser[owner][tokenId].lockingPeriod <= block.timestamp, "Not allowed to approve nft");
             }
         }
     }
