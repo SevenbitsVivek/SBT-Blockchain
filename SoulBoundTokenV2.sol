@@ -31,12 +31,14 @@ contract SoulBoundTokenV2 is ERC721, ERC721URIStorage, Ownable {
 
     function safeMint(address _to, string memory _uri) external onlyOwner {
         require(totalNftMinted < totalNftSupply, "NFT reached its limit");
+
         tokenID ++;
         nftUser[_to][tokenID].tokenId = tokenID;
         nftUser[_to][tokenID].nftUserAddress = _to;
         nftUser[_to][tokenID].boughtTime = block.timestamp;
         totalNftMinted++;
         nftUser[_to][tokenID].lockingPeriod = totalNftMinted <= nftToBeMintInLockingPeriod ? block.timestamp + nftLockingPeriod: 0;
+        
         _safeMint(_to, tokenID);
         _setTokenURI(tokenID, _uri);
     }
@@ -51,6 +53,7 @@ contract SoulBoundTokenV2 is ERC721, ERC721URIStorage, Ownable {
             if (nftUser[from][tokenId].lockingPeriod >= block.timestamp || nftUser[to][tokenId].lockingPeriod >= block.timestamp) {
                 require(from == address(0) || to == address(0), "Not allowed to transfer nft");
             }
+
             nftUser[from][tokenId].isSold = true;
         } 
 
@@ -58,6 +61,7 @@ contract SoulBoundTokenV2 is ERC721, ERC721URIStorage, Ownable {
             if (nftUser[from][tokenId].tokenId <= nftToBeMintInLockingPeriod) {
                 require(nftUser[from][tokenId].lockingPeriod <= block.timestamp, "Not allowed to transfer nft");
             }
+
             nftUser[from][tokenId].isSold = true;
         }
     }
