@@ -57,47 +57,35 @@ contract SoulBoundTokenV3 is ERC721, ERC721URIStorage, Ownable {
             if (nftUser[from][tokenId].lockingPeriod >= block.timestamp || nftUser[to][tokenId].lockingPeriod >= block.timestamp) {
                 require(from == address(0) || to == address(0), "Not allowed to transfer nft");
             }
-
-            nftUser[from][tokenId].isSold = true;
         } 
 
         if (totalNftMinted > nftToBeMintInLockingPeriod && totalNftMinted <= totalNftSupply) {
             if (nftUser[from][tokenId].tokenId < nftToBeMintInLockingPeriod) {
                 require(nftUser[from][tokenId].lockingPeriod <= block.timestamp, "Not allowed to transfer nft");
             }
-            
-            nftUser[from][tokenId].isSold = true;
         }
+        
+        nftUser[from][tokenId].isSold = true;
     }
 
     function approve(address to, uint256 tokenId) public virtual override {
-        if (totalNftMinted <= nftToBeMintInLockingPeriod) {
-            address owner = ERC721.ownerOf(tokenId);
+        address owner = ERC721.ownerOf(tokenId);
 
-            require(to != owner, "ERC721: approval to current owner");
-            require(
-            _msgSender() == owner || isApprovedForAll(owner, _msgSender()),
+        require(to != owner, "ERC721: approval to current owner");
+        require(
+        _msgSender() == owner || isApprovedForAll(owner, _msgSender()),
             "ERC721: approve caller is not token owner nor approved for all"
-            );
+        );
 
-            _approve(to, tokenId);
+        _approve(to, tokenId);
 
+        if (totalNftMinted <= nftToBeMintInLockingPeriod) {
             if (nftUser[owner][tokenId].lockingPeriod >= block.timestamp || nftUser[to][tokenId].lockingPeriod >= block.timestamp) {
                 require(owner == address(0) || to == address(0), "Not allowed to approve nft");
             }
         } 
 
         if (totalNftMinted > nftToBeMintInLockingPeriod && totalNftMinted <= totalNftSupply) {
-            address owner = ERC721.ownerOf(tokenId);
-
-            require(to != owner, "ERC721: approval to current owner");
-            require(
-            _msgSender() == owner || isApprovedForAll(owner, _msgSender()),
-            "ERC721: approve caller is not token owner nor approved for all"
-            );
-
-            _approve(to, tokenId);
-
             if (nftUser[owner][tokenId].tokenId < nftToBeMintInLockingPeriod) {
                 require(nftUser[owner][tokenId].lockingPeriod <= block.timestamp, "Not allowed to approve nft");
             }
