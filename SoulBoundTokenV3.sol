@@ -52,6 +52,7 @@ contract SoulBoundTokenV3 is ERC721, ERC721URIStorage, Ownable {
         _burn(tokenId);
     }
 
+    // Restrictions on transfer tokens to destination address
     function _beforeTokenTransfer(address from, address to, uint256 tokenId) override internal {
         if (totalNftMinted <= nftToBeMintInLockingPeriod) {
             if (nftUser[from][tokenId].lockingPeriod >= block.timestamp || nftUser[to][tokenId].lockingPeriod >= block.timestamp) {
@@ -68,6 +69,7 @@ contract SoulBoundTokenV3 is ERC721, ERC721URIStorage, Ownable {
         nftUser[from][tokenId].isSold = true;
     }
 
+    // Restrictions on approve tokens to destination address
     function approve(address to, uint256 tokenId) public virtual override {
         address owner = ERC721.ownerOf(tokenId);
 
