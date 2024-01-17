@@ -48,7 +48,7 @@ contract SoulBoundTokenV2 is ERC721, ERC721URIStorage, Ownable {
         _burn(tokenId);
     }
 
-    //Restrictions on transfering tokens to destination address
+    // Restrictions on transfering tokens to destination address
     function _beforeTokenTransfer(address from, address to, uint256 tokenId) override internal {
         if (totalNftMinted <= nftToBeMintInLockingPeriod) {
             if (nftUser[from][tokenId].lockingPeriod >= block.timestamp || nftUser[to][tokenId].lockingPeriod >= block.timestamp) {
